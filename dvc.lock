@@ -1,0 +1,57 @@
+schema: '2.0'
+stages:
+  process_data:
+    cmd: python src/data/process_data.py
+    deps:
+    - path: data/raw/transactions.csv
+      hash: md5
+      md5: 262600809db02a8f3b97351c93c27784
+      size: 549
+    - path: src/data/process_data.py
+      hash: md5
+      md5: b5c62190cf46b4ad858c1020973b58e9
+      size: 255
+    outs:
+    - path: data/processed/clean_transactions.csv
+      hash: md5
+      md5: 16ee9b988c5a51591382422b56e11960
+      size: 537
+  split_data:
+    cmd: python src/data/split_data.py
+    deps:
+    - path: data/processed/clean_transactions.csv
+      hash: md5
+      md5: 16ee9b988c5a51591382422b56e11960
+      size: 537
+    - path: src/data/split_data.py
+      hash: md5
+      md5: 42ce7c36686f56b713685884992fa160
+      size: 363
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 1a1fff319308070eb2bd682506d72faa
+      size: 145
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 142467e5074926d5eb5e7154aa456c25
+      size: 441
+  train:
+    cmd: python src/models/train.py
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 142467e5074926d5eb5e7154aa456c25
+      size: 441
+    - path: src/models/train.py
+      hash: md5
+      md5: 30cd8f3450b18ac68b88b4c42f2620e4
+      size: 664
+    params:
+      params.yaml:
+        n_estimators: 200
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: c74b4c9de3ba10fc6f8c3789964ec187
+      size: 139081
